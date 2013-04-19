@@ -80,45 +80,40 @@ void print_queue(int* queuex, int* queuey){
   printf("\n");
 }
 
-
+//Computes the distance matrix using the numeric navigation function
 void computeDistance(int** workspace, int** dist_from_goal, int goal_x, int goal_y) {
   int i,j;
   depth=1;
   //int counter=1;  
-  int* tovisitx=malloc(nbrows*nbcolumns*sizeof(int)); //the queue(FIFO) for x
-  int* tovisity=malloc(nbrows*nbcolumns*sizeof(int)); //the queue for y
+  int* tovisitx=malloc(nbrows*nbcolumns*sizeof(int)); //the queue(FIFO) for abscissa
+  int* tovisity=malloc(nbrows*nbcolumns*sizeof(int)); //the queue for ordinate
   
   int* parentx=malloc(nbrows*sizeof(int)); //the abscissa of parent
   int* parenty=malloc(nbcolumns*sizeof(int)); //the ordinate of parent
   
-  parentx[goal_x]=goal_x;
+  parentx[goal_x]=goal_x;  //Goal is the parent of itself
   parenty[goal_y]=goal_y;
   
 
-  for(i=0;i<nbrows*nbcolumns;i++){
+  for(i=0;i<nbrows*nbcolumns;i++){ //None of the nodes have been visited yet
     tovisitx[i]=-1;
     tovisity[i]=-1;
   }
-  //workspace[goal_x][goal_y]=dist;
-  push(tovisitx,goal_x);
+  push(tovisitx,goal_x);  //Push the goal in the queue
   push(tovisity,goal_y);
-  dist_from_goal[goal_x][goal_y]=0; //root is at distance 0
+  dist_from_goal[goal_x][goal_y]=0; //goal is at distance 0 from itself
   
   while(queueIsEmpty(tovisitx)==0){
-    //print_queue(tovisitx,tovisity);
-    //array_print(depth_from_root);
     i=pull(tovisitx);
     j=pull(tovisity); 
-    //workspace[i][j]=pull_depth(depth_from_root);
     int nbrs = nb_possible_ngbrs(i,j,workspace); // nb of ngbrs of (i,j)
-    int *ngbrx = malloc(nbrs*sizeof(int)); // abcisses of ngbrs
+    int *ngbrx = malloc(nbrs*sizeof(int)); // abscissae of ngbrs
     int *ngbry = malloc(nbrs*sizeof(int)); // ordinates of ngbrs
     int index=0;    
-    if(test(i-1,j)==1 && workspace[i-1][j]==0) {
+    if(test(i-1,j)==1 && workspace[i-1][j]==0) { //check for valid and free cell in the workspace
       ngbrx[index]=i-1;
       ngbry[index]=j;
       index++;
-      //printf(" In case1 \n");
     }
     if(test(i,j-1)==1 && workspace[i][j-1]==0){
       ngbrx[index]=i;
@@ -140,12 +135,12 @@ void computeDistance(int** workspace, int** dist_from_goal, int goal_x, int goal
     }
     int t;
     for(t=0;t<nbrs;t++){
-      push(tovisitx,ngbrx[t]);
+      push(tovisitx,ngbrx[t]); //Push the daughter notes in the queue
       push(tovisity,ngbry[t]);
-      workspace[ngbrx[t]][ngbry[t]]=1; //this node i visited
+      workspace[ngbrx[t]][ngbry[t]]=1; //this node is visited
       dist_from_goal[ngbrx[t]][ngbry[t]]=
-        dist_from_goal[i][j]+1;
-      parentx[ngbrx[t]]=i;
+        dist_from_goal[i][j]+1;   // distance from root to x = distance from root to parent+1
+      parentx[ngbrx[t]]=i;  // parent of ngbr is (i,j)
       parentx[ngbry[t]]=j;
     }
     //pretty_print(depth_from_root);

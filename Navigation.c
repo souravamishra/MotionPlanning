@@ -54,7 +54,7 @@ void push(int* queue, int a){
 
 //pull an element from the queue
 int pull(int* queue){
-  int tmp = tab[0];
+  int tmp = queue[0];
   int i;
   for(i=0;i<nbrows*nbcolumns-1;i++){
     queue[i]=queue[i+1];
@@ -83,7 +83,6 @@ void print_queue(int* queuex, int* queuey){
 //Computes the distance matrix using the numeric navigation function
 void computeDistance(int** workspace, int** dist_from_goal, int goal_x, int goal_y) {
   int i,j;
-  depth=1;
   //int counter=1;  
   int* tovisitx=malloc(nbrows*nbcolumns*sizeof(int)); //the queue(FIFO) for abscissa
   int* tovisity=malloc(nbrows*nbcolumns*sizeof(int)); //the queue for ordinate

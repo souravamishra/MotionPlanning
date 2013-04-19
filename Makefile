@@ -1,12 +1,15 @@
 CC=gcc
+CFLAGS=-Wall
+objects=Navigation.o motionplanning.o
+all: motionplanning Navigation
 
-all: motionplanning
-
-motionplanning.o: motionplanning.c
-	$(CC) -c motionplanning.c
-
+motionplanning: motionplanning.o Navigation.o
+	$(CC) $(CFLAGS) -o motionplanning motionplanning.o
+	$(CC) $(CFLAGS) -o Navigation Navigation.o
+.PHONY: clean
 clean:
-	rm *.o
-	rm motionplanning
-	rm *~ *.aux *.log
+	rm -f $(objects)
+	rm -f Navigation
+	rm -f motionplanning
+	#rm *~ *.aux *.log
 

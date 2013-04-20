@@ -13,7 +13,7 @@ void pretty_print(int** matrix){
   for(x = 0; x < nbrows; x++) {
     for(y = 0; y < nbcolumns; y++) {
       if(matrix[x][y]!=-1)
-      printf(" %d\t", matrix[x][y]);
+        printf(" %d\t", matrix[x][y]);
       else printf("%d\t", matrix[x][y]);
     }
     printf("\n");
@@ -42,7 +42,7 @@ int nb_possible_ngbrs(int i,int j, int** workspace){
 //push a in the queue
 void push(int* queue, int a){
   int i;
-    for(i=0;i<nbrows*nbcolumns;i++){
+  for(i=0;i<nbrows*nbcolumns;i++){
     if(queue[i]==-1) {
       //printf("in %d\n",i);
       queue[i]=a;
@@ -144,7 +144,7 @@ void computeDistance(int** workspace, int** dist_from_goal, int goal_x, int goal
       parentx[ngbry[t]]=j;
     }
     //pretty_print(depth_from_root);
-    }
+  }
   free(tovisitx);
   free(tovisity);
 }
@@ -156,34 +156,34 @@ int* minimum_dist_ngbr(int** distance_from_goal, int i, int j){
   minum_ngbrs_xy[1]=j;
   
   if(test(i,j-1)==1 && distance_from_goal[i][j-1]>=0){
-     if(distance_from_goal[i][j-1]<min){ 
-       min=distance_from_goal[i][j-1];
-       minum_ngbrs_xy[0]=i;
-       minum_ngbrs_xy[1]=j-1;
-     }
+    if(distance_from_goal[i][j-1]<min){ 
+      min=distance_from_goal[i][j-1];
+      minum_ngbrs_xy[0]=i;
+      minum_ngbrs_xy[1]=j-1;
+    }
   }
   if(test(i-1,j)==1 && distance_from_goal[i-1][j]>=0){
-      if(distance_from_goal[i-1][j]<min){
-        min=distance_from_goal[i-1][j];
-        minum_ngbrs_xy[0]=i-1;
-        minum_ngbrs_xy[1]=j;
-      }
-    } 
-    if(test(i+1,j)==1 && distance_from_goal[i+1][j]>=0) {
-      if(distance_from_goal[i+1][j]<min){
-        min=distance_from_goal[i+1][j];
-        minum_ngbrs_xy[0]=i+1;
-        minum_ngbrs_xy[1]=j;
-      }
+    if(distance_from_goal[i-1][j]<min){
+      min=distance_from_goal[i-1][j];
+      minum_ngbrs_xy[0]=i-1;
+      minum_ngbrs_xy[1]=j;
     }
-    if(test(i,j+1)==1 && distance_from_goal[i][j+1]>=0) {
-      if(distance_from_goal[i][j+1]<min){
-        min=distance_from_goal[i][j+1];
-        minum_ngbrs_xy[0]=i;
-        minum_ngbrs_xy[1]=j+1;
-      }
-      }
-    return minum_ngbrs_xy;
+  } 
+  if(test(i+1,j)==1 && distance_from_goal[i+1][j]>=0) {
+    if(distance_from_goal[i+1][j]<min){
+      min=distance_from_goal[i+1][j];
+      minum_ngbrs_xy[0]=i+1;
+      minum_ngbrs_xy[1]=j;
+    }
+  }
+  if(test(i,j+1)==1 && distance_from_goal[i][j+1]>=0) {
+    if(distance_from_goal[i][j+1]<min){
+      min=distance_from_goal[i][j+1];
+      minum_ngbrs_xy[0]=i;
+      minum_ngbrs_xy[1]=j+1;
+    }
+  }
+  return minum_ngbrs_xy;
 
   
 }
@@ -217,6 +217,214 @@ void display_path(int*pathx, int* pathy, int** dist_from_goal){
   }
   printf("Goal Reached !!\n");
 
+}
+
+int heuristic_cost_estimate(int** dist_from_goal,int startx, int starty, int goalx, int goaly){
+  
+  return 0;
+
+}
+
+int* construct_path(int* came_fromx, int* came_fromy, int goalx, int goaly){
+  return NULL;
+
+    }
+
+
+int min_fscore_openlist(int** fscore, int* openlistx, int* openlisty){
+  int min=80000,i=0;
+  int min_index, a,b;
+  while(openlistx[i]!=-1){
+    a=openlistx[i];
+    b=openlistx[i];
+    if(fscore[a][b]<min){
+      min=fscore[a][b];
+      min_index=i;
+    }
+    i++;
+  }
+  return min_index;
+
+}
+
+void remove_min(int* list, int min_index ){
+  list[min_index]=-1;
+  int i=min_index;
+  do{
+    list[i]=list[i+1];
+    i++;
+  }while(list[i]!=-1);
+}
+
+int* abscissa_ngbrs(int i, int j, int**workspace){
+  int nbrs = nb_possible_ngbrs(i,j,workspace); // nb of ngbrs of (i,j)
+  int *ngbrx = malloc(nbrs*sizeof(int)); // abscissae of ngbrs
+    
+  int index=0;    
+  if(test(i-1,j)==1 && workspace[i-1][j]==0) { //check for valid and free cell in the workspace
+    ngbrx[index]=i-1;
+    //ngbry[index]=j;
+    index++;
+  }
+  if(test(i,j-1)==1 && workspace[i][j-1]==0){
+    ngbrx[index]=i;
+    //ngbry[index]=j-1;
+    index++;
+    // printf(" In case2\n");
+  } 
+  if(test(i+1,j)==1 && workspace[i+1][j]==0) {
+    ngbrx[index]=i+1;
+    //ngbry[index]=j;
+    index++;
+    //printf(" In case3\n");
+  }
+  if(test(i,j+1)==1 && workspace[i][j+1]==0) {
+    ngbrx[index]=i;
+    //ngbry[index]=j+1;
+    index++;
+    //printf(" In case4\n");
+  }
+  return ngbrx;
+  
+}
+
+int* ordinate_ngbrs(int i, int j, int**workspace){
+  
+  int nbrs = nb_possible_ngbrs(i,j,workspace); // nb of ngbrs of (i,j)
+  int *ngbry = malloc(nbrs*sizeof(int)); // ordinates of ngbrs
+  int index=0;
+
+  if(test(i-1,j)==1 && workspace[i-1][j]==0) { //check for valid and free cell in the workspace
+    //ngbrx[index]=i-1;
+    ngbry[index]=j;
+    index++;
+  }
+  if(test(i,j-1)==1 && workspace[i][j-1]==0){
+    //ngbrx[index]=i;
+    ngbry[index]=j-1;
+    index++;
+    // printf(" In case2\n");
+  } 
+  if(test(i+1,j)==1 && workspace[i+1][j]==0) {
+    //ngbrx[index]=i+1;
+    ngbry[index]=j;
+    index++;
+    //printf(" In case3\n");
+  }
+  if(test(i,j+1)==1 && workspace[i][j+1]==0) {
+    //ngbrx[index]=i;
+    ngbry[index]=j+1;
+    index++;
+    //printf(" In case4\n");
+  }
+  return ngbry;
+}
+
+int in_list(int a, int b, int* closedlistx, int* closedlisty){
+  int i=0;
+  while(closedlistx[i]!=-1){
+    if(closedlistx[i]==a && closedlisty[i]==b){
+      return 1;
+    }
+    i++;
+    
+  }
+  return 0;
+  
+}
+
+
+
+int * A_star(int** workspace, int** dist_from_goal, int startx, int starty, int goalx, int goaly){
+  
+  int* openlistx=malloc(nbrows*nbcolumns*sizeof(int)); //the queue(FIFO) for abscissa
+  int* openlisty=malloc(nbrows*nbcolumns*sizeof(int)); //the queue for ordinate
+  
+  int* closedlistx=malloc(nbrows*nbcolumns*sizeof(int)); //the queue(FIFO) for abscissa
+  int* closedlisty=malloc(nbrows*nbcolumns*sizeof(int)); //the queue for ordinate
+  
+
+  int* came_fromx=malloc(nbrows*sizeof(int)); //the abscissa of parent
+  int* came_fromy=malloc(nbcolumns*sizeof(int)); //the ordinate of parent
+ 
+  int** fscore;
+  int i;
+  fscore=malloc(nbrows*sizeof(int*)); //the fscore matrix
+  for(i=0;i<nbrows;i++){
+    fscore[i]=malloc(nbcolumns*sizeof(int));
+  }
+  
+  int** gscore;
+ 
+  gscore=malloc(nbrows*sizeof(int*)); //the gscore matrix
+  for(i=0;i<nbrows;i++){
+    gscore[i]=malloc(nbcolumns*sizeof(int));
+  }
+ 
+
+  for(i=0;i<nbrows*nbcolumns;i++){ //the queues are empty
+    openlistx[i]=-1;
+    openlisty[i]=-1;
+    closedlistx[i]=-1;
+    closedlisty[i]=-1;
+    came_fromx[i]=-1;
+    came_fromy[i]=-1;
+  }
+  
+  push(openlistx,startx); //initialy openlist contains the start cell
+  push(openlisty,starty);
+  
+  gscore[startx][starty]=0;
+  fscore[startx][starty]=heuristic_cost_estimate(dist_from_goal,startx, starty, goalx, goaly);
+  
+  
+  int currentx;
+  int currenty;
+  int index=0;
+  while(queueIsEmpty(openlistx)==0){
+    int index_minlist=min_fscore_openlist(fscore, openlistx, openlisty);
+    currentx=openlistx[index_minlist];
+    currenty=openlisty[index_minlist];
+    if(currentx==goalx && currenty==goaly){
+      return(construct_path(came_fromx,came_fromy,goalx,goaly));
+    }
+    
+    remove_min(openlistx,index_minlist);
+    remove_min(openlisty,index_minlist);
+    push(closedlistx,currentx);
+    push(closedlisty,currenty);
+    
+    int ngbrs=nb_possible_ngbrs(currentx,currenty,workspace);
+    int* ngbrsx=abscissa_ngbrs(currentx, currenty, workspace);
+    int* ngbrsy=ordinate_ngbrs(currentx, currenty, workspace);
+    int i;
+    for(i=0;i<ngbrs;i++){
+      int dist_from_ngbr=1;
+      int tentative_gscore=gscore[currentx][currenty]+dist_from_ngbr;
+      if(in_list(ngbrsx[i],ngbrsy[i],
+                       closedlistx, closedlisty)==1){
+        if(tentative_gscore>=gscore[ngbrsx[i]][ngbrsy[i]]) continue;
+        
+      }
+      if(in_list(ngbrsx[i],ngbrsy[i],openlistx, openlisty)==1 
+         || tentative_gscore<gscore[ngbrsx[i]][ngbrsy[i]]){
+        came_fromx[index]=currentx;
+        came_fromy[index]=currenty;
+        index++;
+        gscore[ngbrsx[i]][ngbrsy[i]]=tentative_gscore;
+        fscore[ngbrsx[i]][ngbrsy[i]]=gscore[ngbrsx[i]][ngbrsy[i]]+heuristic_cost_estimate(dist_from_goal,ngbrsx[i],ngbrsy[i], goalx, goaly);
+        
+        if(in_list(ngbrsx[i],ngbrsy[i],openlistx, openlisty)==1){
+          push(openlistx,ngbrsx[i]);
+          push(openlisty,ngbrsy[i]);
+        }
+        
+      }
+    }
+  }
+
+  return NULL;
+ 
 }
 
 
@@ -253,7 +461,7 @@ int main(int argc, char** argv){
   workspace[goal_x][goal_y]=1; // Goal in the workspace denoted by 1
   
   int** dist_from_goal;   // matrix to store the distance of each
-                           // cell from the goal cell 
+  // cell from the goal cell 
   dist_from_goal = malloc(nbrows*sizeof(int*));
   for(i = 0; i < nbrows; i++) 
     dist_from_goal[i] = malloc(sizeof(int) * nbcolumns);
@@ -285,7 +493,7 @@ int main(int argc, char** argv){
   
   printf("\n");
   for(i=0;i<nbcolumns-1;i++)
-  printf("xxxxxxxxx");
+    printf("xxxxxxxxx");
   printf("\n\n");
   printf("here is the distance matrix\n");
   pretty_print(dist_from_goal);
@@ -299,9 +507,9 @@ int main(int argc, char** argv){
     free(workspace[i]);
     free(dist_from_goal[i]);
   }
-    free(workspace);
-    free(dist_from_goal);
-    free(pathx);
-    free(pathy);
+  free(workspace);
+  free(dist_from_goal);
+  free(pathx);
+  free(pathy);
   return 0;
 }

@@ -80,6 +80,7 @@ void print_queue(int* queuex, int* queuey){
   printf("\n");
 }
 
+
 //Computes the distance matrix using the numeric navigation function
 void computeDistance(int** workspace, int** dist_from_goal, int goal_x, int goal_y) {
   int i,j;
@@ -146,23 +147,96 @@ void computeDistance(int** workspace, int** dist_from_goal, int goal_x, int goal
     }
   free(tovisitx);
   free(tovisity);
-}   
+}
+
+int* minimum_dist_ngbr(int** distance_from_goal, int i, int j){
+  int *minum_ngbrs_xy=malloc(2*sizeof(int));
+  int min=distance_from_goal[i][j];
+  minum_ngbrs_xy[0]=i;
+  minum_ngbrs_xy[1]=j;
+  
+  if(test(i,j-1)==1 && distance_from_goal[i][j-1]>=0){
+     if(distance_from_goal[i][j-1]<min){ 
+       min=distance_from_goal[i][j-1];
+       minum_ngbrs_xy[0]=i;
+       minum_ngbrs_xy[1]=j-1;
+     }
+  }
+  if(test(i-1,j)==1 && distance_from_goal[i-1][j]>=0){
+      if(distance_from_goal[i-1][j]<min){
+        min=distance_from_goal[i-1][j];
+        minum_ngbrs_xy[0]=i-1;
+        minum_ngbrs_xy[1]=j;
+      }
+    } 
+    if(test(i+1,j)==1 && distance_from_goal[i+1][j]>=0) {
+      if(distance_from_goal[i+1][j]<min){
+        min=distance_from_goal[i+1][j];
+        minum_ngbrs_xy[0]=i+1;
+        minum_ngbrs_xy[1]=j;
+      }
+    }
+    if(test(i,j+1)==1 && distance_from_goal[i][j+1]>=0) {
+      if(distance_from_goal[i][j+1]<min){
+        min=distance_from_goal[i][j+1];
+        minum_ngbrs_xy[0]=i;
+        minum_ngbrs_xy[1]=j+1;
+      }
+      }
+    return minum_ngbrs_xy;
+
+  
+}
+void path_finder(int** distance_from_goal, int startx, int starty, int goalx,int goaly, int* pathx, int* pathy ){
+   
+  int tmp=0;
+  pathx[0]=startx;
+  pathy[0]=starty;
+  while(!(startx==goalx && starty==goaly)){
+    int* closest_ngbr_to_goal=minimum_dist_ngbr(distance_from_goal,startx,starty);
+    tmp++;
+    
+    //printf("Check 1 : Closest neighbour of (%d,%d) is (%d,%d)\n",startx,starty,closest_ngbr_to_goal[0],closest_ngbr_to_goal[1]);
+
+    pathx[tmp]=closest_ngbr_to_goal[0];
+    pathy[tmp]=closest_ngbr_to_goal[1];
+   
+    startx=closest_ngbr_to_goal[0];
+    starty=closest_ngbr_to_goal[1];
+  }
+   
+
+}
+
+void display_path(int*pathx, int* pathy, int** dist_from_goal){
+  int i=0;
+  printf("Starting from -> ");
+  while(pathx[i]!=-1){
+    printf("(%d, %d, [%d]) -> ",pathx[i],pathy[i],dist_from_goal[pathx[i]][pathy[i]]);
+    i++;
+  }
+  printf("Goal Reached !!\n");
+
+}
 
 
 int main(int argc, char** argv){  
   
-  nbrows = 6; // nb of rows
-  nbcolumns = 12;  // nb of columns
+  nbrows = 6; // 6 nb of rows
+  nbcolumns= 12; // 12 nb of columns
 
   int i;
-  int goal_x = 4; // abscissa of goal 
-  int goal_y = 9; // ordinate of goal
+  int goal_x = 4; // 4 abscissa of goal 
+  int goal_y = 9; //9 ordinate of goal
   
-  int **workspace; //matrix to create the workspace
-  workspace =  malloc(sizeof(int*) * nbrows);
+  int sourcex=0; //source abscissa
+  int sourcey=2; //source ordinate
+   
+  int** workspace; //matrix to create the workspace
+  workspace = malloc(sizeof(int*) * nbrows);
   for(i = 0; i < nbrows; i++) 
     workspace[i] = malloc(sizeof(int) * nbcolumns);
-  
+ 
   workspace[2][3]=-1; //obstacles in the workspace denoted by -1
   workspace[2][4]=-1;
   workspace[2][5]=-1;
@@ -176,7 +250,6 @@ int main(int argc, char** argv){
   workspace[4][5]=-1;
   workspace[4][6]=-1;
   
-
   workspace[goal_x][goal_y]=1; // Goal in the workspace denoted by 1
   
   int** dist_from_goal;   // matrix to store the distance of each
@@ -197,23 +270,38 @@ int main(int argc, char** argv){
   dist_from_goal[4][4]=-1;
   dist_from_goal[4][5]=-1;
   dist_from_goal[4][6]=-1;
- 
-
+  
   printf("Here is the workspace \n");
   pretty_print(workspace);
   
   computeDistance(workspace,dist_from_goal,goal_x,goal_y);
+  
+  int* pathx=malloc(nbrows*nbcolumns*sizeof(int));//the queue(FIFO) for abscissa
+  int* pathy=malloc(nbrows*nbcolumns*sizeof(int));//the queue for ordinate
+  for(i=0;i<nbrows*nbcolumns;i++){ //Path initialization
+    pathx[i]=-1;
+    pathy[i]=-1;
+  }
+  
   printf("\n");
   for(i=0;i<nbcolumns-1;i++)
   printf("xxxxxxxxx");
   printf("\n\n");
   printf("here is the distance matrix\n");
   pretty_print(dist_from_goal);
+
+  printf("Here is a path from source to destination\n");
+  
+  //minimum_dist_ngbr(dist_from_goal,sourcex, sourcey);
+  path_finder(dist_from_goal,sourcex, sourcey, goal_x, goal_y,pathx,pathy);
+  display_path(pathx,pathy, dist_from_goal);
   for (i = 0; i < nbrows; i++){  
     free(workspace[i]);
     free(dist_from_goal[i]);
   }
     free(workspace);
     free(dist_from_goal);
+    free(pathx);
+    free(pathy);
   return 0;
 }

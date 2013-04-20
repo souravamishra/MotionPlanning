@@ -88,11 +88,11 @@ void computeDistance(int** workspace, int** dist_from_goal, int goal_x, int goal
   int* tovisitx=malloc(nbrows*nbcolumns*sizeof(int)); //the queue(FIFO) for abscissa
   int* tovisity=malloc(nbrows*nbcolumns*sizeof(int)); //the queue for ordinate
   
-  int* parentx=malloc(nbrows*sizeof(int)); //the abscissa of parent
-  int* parenty=malloc(nbcolumns*sizeof(int)); //the ordinate of parent
+  //int* parentx=malloc(nbrows*sizeof(int)); //the abscissa of parent
+  //int* parenty=malloc(nbcolumns*sizeof(int)); //the ordinate of parent
   
-  parentx[goal_x]=goal_x;  //Goal is the parent of itself
-  parenty[goal_y]=goal_y;
+  //parentx[goal_x]=goal_x;  //Goal is the parent of itself
+  //parenty[goal_y]=goal_y;
   
 
   for(i=0;i<nbrows*nbcolumns;i++){ //None of the nodes have been visited yet
@@ -140,8 +140,8 @@ void computeDistance(int** workspace, int** dist_from_goal, int goal_x, int goal
       workspace[ngbrx[t]][ngbry[t]]=1; //this node is visited
       dist_from_goal[ngbrx[t]][ngbry[t]]=
         dist_from_goal[i][j]+1;   // distance from root to x = distance from root to parent+1
-      parentx[ngbrx[t]]=i;  // parent of ngbr is (i,j)
-      parentx[ngbry[t]]=j;
+      //parentx[ngbrx[t]]=i;  // parent of ngbr is (i,j)
+      //parentx[ngbry[t]]=j;
     }
     //pretty_print(depth_from_root);
   }
@@ -227,18 +227,23 @@ int heuristic_cost_estimate(int startx, int starty, int goalx, int goaly){
 
 }
 
-void construct_path(int* came_fromx, int* came_fromy){
+void construct_path(int** came_fromx, int** came_fromy,int goalx, int goaly, int startx, int starty){
   
-  int i=0;
-  printf("Starting from -> ");
-  while(came_fromx[i]!=-1){
-    printf("(%d, %d) -> ",came_fromx[i],came_fromy[i]);
-    i++;
+  int a;
+  int b;
+  printf("(%d,%d) -> ",goalx,goaly);
+  while(!(a==startx && b==starty)){
+    a=came_fromx[goalx][goaly];
+    b=came_fromy[goalx][goaly];
+    if(a==startx && b==starty)
+      printf("(%d,%d)",a,b);
+    else printf("(%d,%d) -> ",a,b);
+    goalx=a;
+    goaly=b;
   }
-  printf("Goal Reached !!\n");
+  printf("\n");
 
-
-    }
+}
 
 
 int min_fscore_openlist(int** fscore, int* openlistx, int* openlisty){
@@ -353,14 +358,18 @@ void A_star(int** workspace, int** dist_from_goal, int startx, int starty, int g
   int* closedlistx=malloc(nbrows*nbcolumns*sizeof(int)); //the queue(FIFO) for abscissa
   int* closedlisty=malloc(nbrows*nbcolumns*sizeof(int)); //the queue for ordinate
   
-  int* came_fromx=malloc(nbrows*nbcolumns*sizeof(int)); //the abscissa of parent
-  int* came_fromy=malloc(nbrows*nbcolumns*sizeof(int)); //the ordinate of parent
+  int** came_fromx;
+  came_fromx=malloc(nbrows*sizeof(int*)); //the abscissa of parent
+  int** came_fromy;
+  came_fromy=malloc(nbrows*sizeof(int*)); //the ordinate of parent
  
   int** fscore;
-  int i;
+  int i,j;
   fscore=malloc(sizeof(int*) * nbrows); //the fscore matrix
   for(i=0;i<nbrows;i++){
     fscore[i]=malloc(sizeof(int) * nbcolumns);
+    came_fromx[i]=malloc(sizeof(int) * nbcolumns);
+    came_fromy[i]=malloc(sizeof(int) * nbcolumns);
   }
  
   int** gscore;
@@ -376,10 +385,16 @@ void A_star(int** workspace, int** dist_from_goal, int startx, int starty, int g
     openlisty[i]=-1;
     closedlistx[i]=-1;
     closedlisty[i]=-1;
-    came_fromy[i]=-1;
-    came_fromx[i]=-1;
+    //came_fromy[i]=-1;
+    //came_fromx[i]=-1;
   }
-
+  
+  for(i=0;i<nbrows;i++){
+    for(j=0;j<nbcolumns;j++){
+      came_fromx[i][j]=-1;
+      came_fromy[i][j]=-1;
+    }
+  }
   
   
   push(openlistx,startx); //initialy openlist contains the start cell
@@ -391,80 +406,78 @@ void A_star(int** workspace, int** dist_from_goal, int startx, int starty, int g
     
   int currentx;
   int currenty;
-  int index=0;
+  //int index=0;
   
   while(queueIsEmpty(openlistx)==0){
-    printf("Open list is : \n");
-    print_queue(openlistx, openlisty);
+    //printf("Open list is : \n");
+    //print_queue(openlistx, openlisty);
 
-    printf("Closed list is :\n");
-    print_queue(closedlistx, closedlisty);
+    //printf("Closed list is :\n");
+    //print_queue(closedlistx, closedlisty);
     
-    printf("Camefromx list is : \n");
-    for(i=0;i<nbrows;i++)
+    /* printf("Camefromx list is : \n");
+    for(i=0;i<nbrows*nbcolumns;i++)
       printf("%d",came_fromx[i]);
     printf("\n");
-    for(i=0;i<nbcolumns;i++)
+    for(i=0;i<nbrows*nbcolumns;i++)
       printf("%d",came_fromy[i]);
+    */
     
-    
-    printf("\nThe gscore is : \n");
+    //printf("\nThe gscore is : \n");
     //pretty_print(gscore);
-    printf("The fscore is : \n");
+    //printf("The fscore is : \n");
     //pretty_print(fscore);
-    print_queue(closedlistx, closedlisty);
+    //print_queue(closedlistx, closedlisty);
     int index_minlist=min_fscore_openlist(fscore, openlistx, openlisty);
     currentx=openlistx[index_minlist];
     currenty=openlisty[index_minlist];
-    printf("In open and lowest in fscore (%d, %d)\n",currentx,currenty);
+    //printf("In open and lowest in fscore (%d, %d)\n",currentx,currenty);
 
     if(currentx==goalx && currenty==goaly){
-      return(construct_path(came_fromx,came_fromy));
+      printf("Printing the path now\n");
+      return(construct_path(came_fromx,came_fromy,goalx,goaly, startx, starty));
     }
     
     remove_min(openlistx,index_minlist);
     remove_min(openlisty,index_minlist);
-    printf("Removing from Open list : \n");
-    print_queue(openlistx, openlisty);
+    //printf("Removing from Open list : \n");
+    //print_queue(openlistx, openlisty);
 
     push(closedlistx,currentx);
     push(closedlisty,currenty);
-    printf("Added to Closed list : \n");
-    print_queue(closedlistx, closedlisty);
+    //printf("Added to Closed list : \n");
+    //print_queue(closedlistx, closedlisty);
 
     
     int ngbrs=nb_possible_ngbrs(currentx,currenty, workspace);
-    pretty_print(workspace);
-
-    
-    
-    printf("(%d,%d)",currentx, currenty);
+    //pretty_print(workspace);
+    //printf("(%d,%d)",currentx, currenty);
     int* ngbrsx=abscissa_ngbrs(currentx, currenty, workspace);
     int* ngbrsy=ordinate_ngbrs(currentx, currenty, workspace);
     
-    printf("The neighbors of current are %d \n", ngbrs);
-    for(i=0;i<ngbrs;i++)
-      printf("(%d,%d)",ngbrsx[i],ngbrsy[i]);
+    //printf("The neighbors of current are %d \n", ngbrs);
+    //for(i=0;i<ngbrs;i++)
+    //printf("(%d,%d)",ngbrsx[i],ngbrsy[i]);
     
     for(i=0;i<ngbrs;i++){
       int dist_from_ngbr=1;
       int tentative_gscore=gscore[currentx][currenty]+dist_from_ngbr;
-      printf("Tentataive score here is %d \n", tentative_gscore);
+      //printf("Tentataive score here is %d \n", tentative_gscore);
       if(in_list(ngbrsx[i],ngbrsy[i],closedlistx, closedlisty)==1){
           continue;
         
       }
       if(in_list(ngbrsx[i],ngbrsy[i],openlistx, openlisty)==0 
          || tentative_gscore<gscore[ngbrsx[i]][ngbrsy[i]]){
-        printf("I'm here 2\n");
-        came_fromx[index]=currentx;
-        came_fromy[index]=currenty;
-        index++;
+        //printf("I'm here 2\n");
+        came_fromx[ngbrsx[i]][ngbrsy[i]]=currentx;
+        came_fromy[ngbrsx[i]][ngbrsy[i]]=currenty;
+        //index++;
         gscore[ngbrsx[i]][ngbrsy[i]]=tentative_gscore;
         fscore[ngbrsx[i]][ngbrsy[i]]=gscore[ngbrsx[i]][ngbrsy[i]]+heuristic_cost_estimate(ngbrsx[i],ngbrsy[i], goalx, goaly);
-         printf("\nThe gscore in nbgr is : \n");
+        //printf("\nThe gscore in nbgr is : \n");
          //pretty_print(gscore);
-         printf("The fscore in ngbr is : \n");
+         //printf("The fscore in ngbr is : \n");
          //pretty_print(fscore);
         
         if(in_list(ngbrsx[i],ngbrsy[i],openlistx, openlisty)==0){
@@ -495,21 +508,21 @@ void A_star(int** workspace, int** dist_from_goal, int startx, int starty, int g
 
 int main(int argc, char** argv){  
   
-  nbrows = 3; // 6 nb of rows
-  nbcolumns= 3; // 12 nb of columns
+  nbrows = 6; // 6 nb of rows
+  nbcolumns= 12; // 12 nb of columns
 
   int i,j;
-  int goal_x = 2; // 4 abscissa of goal 
-  int goal_y = 2; //9 ordinate of goal
+  int goal_x = 4; // 4 abscissa of goal 
+  int goal_y = 9; //9 ordinate of goal
   
   int sourcex=0; //source abscissa
-  int sourcey=0; //source ordinate
+  int sourcey=2; //source ordinate
    
   int** workspace; //matrix to create the workspace
   workspace = malloc(sizeof(int*) * nbrows);
   for(i = 0; i < nbrows; i++) 
     workspace[i] = malloc(sizeof(int) * nbcolumns);
-  /*
+  
   workspace[2][3]=-1; //obstacles in the workspace denoted by -1
   workspace[2][4]=-1;
   workspace[2][5]=-1;
@@ -522,8 +535,8 @@ int main(int argc, char** argv){
   workspace[4][4]=-1;
   workspace[4][5]=-1;
   workspace[4][6]=-1;
-  */
-  workspace[1][1]=-1;
+  
+  //workspace[1][1]=-1;
   //workspace[2][1]=-1;
   workspace[goal_x][goal_y]=1; // Goal in the workspace denoted by 1
   
@@ -532,7 +545,7 @@ int main(int argc, char** argv){
   dist_from_goal = malloc(nbrows*sizeof(int*));
   for(i = 0; i < nbrows; i++) 
     dist_from_goal[i] = malloc(sizeof(int) * nbcolumns);
-  /*
+  
   dist_from_goal[2][3]=-1; // distance to obstacles
   dist_from_goal[2][4]=-1;
   dist_from_goal[2][5]=-1;
@@ -545,8 +558,8 @@ int main(int argc, char** argv){
   dist_from_goal[4][4]=-1;
   dist_from_goal[4][5]=-1;
   dist_from_goal[4][6]=-1;
-  */
-  dist_from_goal[1][1]=-1;
+  
+  //dist_from_goal[1][1]=-1;
   //dist_from_goal[2][1]=-1;
   printf("Here is the workspace \n");
   pretty_print(workspace);

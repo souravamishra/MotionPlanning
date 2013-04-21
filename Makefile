@@ -1,15 +1,30 @@
-CC=gcc
-CFLAGS=-Wall
-objects=Navigation.o motionplanning.o
-all: motionplanning Navigation
+CC		= gcc
+CFLAGS		= -Wall
+FLAG		= -g -O0
+objects		= Navigation.o motionplanning.o
+executables	= Navigation motionplanning
 
-motionplanning: motionplanning.o Navigation.o
-	$(CC) $(CFLAGS) -o motionplanning motionplanning.o
-	$(CC) $(CFLAGS) -o Navigation Navigation.o
+all: motionplanning Navigation
+	
+util.o: util.h util.c
+	$(CC) $(FLAG) $(CFLAGS) -c util.c
+
+motionplanning.o: motionplanning.c util.h
+	$(CC) $(FLAG) $(CFLAGS) -c motionplanning.c
+ 
+motionplanning: motionplanning.o util.o
+	$(CC) -o motionplanning motionplanning.o util.o
+	
+Navigation.o: Navigation.c util.h
+	$(CC) $(FLAG) $(CFLAGS) -c Navigation.c
+ 
+Navigation: Navigation.o util.o
+	$(CC) -o Navigation Navigation.o util.o
+
 .PHONY: clean
+
 clean:
 	rm -f $(objects)
-	rm -f Navigation
-	rm -f motionplanning
+	rm -f $(executables)
 	#rm *~ *.aux *.log
 

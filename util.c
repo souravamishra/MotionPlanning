@@ -23,7 +23,7 @@ void init (workspace *w) {
 		for (j = 0; j < w->nbcolumns; j++)
 				w->distance[i][j] = 0;
 	
-  for(i=0;i<w->nbrows * w->nbcolumns;i++){
+	for(i=0;i<w->nbrows * w->nbcolumns;i++){
 		w->pathx[i]=-1;
 		w->pathy[i]=-1;
 	}
@@ -112,8 +112,8 @@ int obstacles (workspace *w)  {
 
 void disp_grid (workspace *w) {
 
-  printf("The source is (%d,%d) \n",w->sx,w->sy);
-  printf("The destination is (%d,%d) \n",w->dx,w->dy);
+	printf("The source is (%d,%d) \n",w->sx,w->sy);
+	printf("The destination is (%d,%d) \n",w->dx,w->dy);
 	int i, j;
 	printf("\nDisplaying the workspace:\n");
 	for (i = 0; i < w->nbrows; i++) {
@@ -128,8 +128,8 @@ void disp_grid (workspace *w) {
 }
 
 void disp_distance(workspace *w){
-  int i,j;
-printf("\n-----------------------------------------");
+	int i,j;
+	printf("\n-----------------------------------------");
 	printf("\nDisplaying the distance matrix:\n");
 	for (i = 0; i < w->nbrows; i++) {
 		for (j = 0; j < w->nbcolumns; j++){
@@ -141,7 +141,6 @@ printf("\n-----------------------------------------");
 		printf("\n");
 	}
 	printf("\n");
-
 }
 
 void input (workspace *w) {
@@ -179,81 +178,67 @@ void reset_grid(workspace* w){
 	for(i=0;i<nbrows;i++)
 		for(j=0;j<nbcolumns;j++)
 			if(w->grid[i][j]==1) w->grid[i][j]=0;
-		
-
-
 }
 
 int test(int i, int j){
 
-  if(i>=0 && i<nbrows && j>=0 && j<nbcolumns) return 1;
-  return 0;
-
+	if(i>=0 && i<nbrows && j>=0 && j<nbcolumns)
+		return 1;
+	return 0;
 }
 
 int nb_possible_ngbrs(int i, int j, workspace* w){
-
-  int tmp=0;
-  if(test(i-1,j)==1 && w->grid[i-1][j]==0) tmp++;
-  if(test(i,j-1)==1 && w->grid[i][j-1]==0) tmp++;
-  if(test(i+1,j)==1 && w->grid[i+1][j]==0) tmp++;
-  if(test(i,j+1)==1 && w->grid[i][j+1]==0) tmp++;
-  return tmp;
-
+ 	int tmp=0;
+	if(test(i-1,j)==1 && w->grid[i-1][j]==0) tmp++;
+	if(test(i,j-1)==1 && w->grid[i][j-1]==0) tmp++;
+	if(test(i+1,j)==1 && w->grid[i+1][j]==0) tmp++;
+	if(test(i,j+1)==1 && w->grid[i][j+1]==0) tmp++;
+	return tmp;
 }
 
 void display_path(workspace* w){
-   int i=0;
-   printf("Displaying the path found from source to destination \n");
-   printf("Starting from -> ");
-   while(w->pathx[i]!=-1){
-     printf("(%d, %d, [%d]) -> ",w->pathx[i],w->pathy[i],
-	w->distance[w->pathx[i]][w->pathy[i]]);
-     i++;
-   }
-   printf("Goal Reached !!\n");
- 
+	int i=0;
+	printf("Displaying the path found from source to destination \n");
+	printf("Starting from -> ");
+	while(w->pathx[i]!=-1){
+		printf("(%d, %d, [%d]) -> ",w->pathx[i],w->pathy[i],
+		w->distance[w->pathx[i]][w->pathy[i]]);
+		i++;
+	}
+	printf("Goal Reached !!\n"); 
 }
 
 
 void push(int* queue, int a) {
-    int i;
-  for(i=0;i< nbrows * nbcolumns;i++){
-    if(queue[i]==-1) {
-      queue[i]=a;
-      return;
-    }
-  }
-
-
+	int i;
+	for(i=0;i< nbrows * nbcolumns;i++){
+		if(queue[i]==-1) {
+			queue[i]=a;
+			return;
+		}
+	}
 }
 
 int pull(int* queue){
 
-  int tmp = queue[0];
-  int i;
-  for(i=0;i< nbrows* nbcolumns-1;i++){
-    queue[i]=queue[i+1];
-  }
-  queue[nbrows * nbcolumns-1]=-1;
-  return tmp;
-
-
+	int tmp = queue[0];
+	int i;
+	for(i=0;i< nbrows* nbcolumns-1;i++){
+		queue[i]=queue[i+1];
+	}
+	queue[nbrows * nbcolumns-1]=-1;
+	return tmp;
 } 
 
 int queueIsEmpty(int* queue) {
-  if(queue[0]==-1) return 1;
-  return 0;
-  
-
+	if(queue[0]==-1) return 1;
+	return 0;
 }
 
 void print_queue(int* queuex, int* queuey) {
-  int i;
-  printf("the queue is  ");
-  for(i=0;i< nbrows* nbcolumns;i++)
-    printf("(%d,%d)",queuex[i],queuey[i]);
-  printf("\n");
-
+	int i;
+	printf("the queue is  ");
+	for(i=0;i< nbrows* nbcolumns;i++)
+		printf("(%d,%d)",queuex[i],queuey[i]);
+	printf("\n");
 }
-

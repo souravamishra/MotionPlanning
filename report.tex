@@ -152,19 +152,19 @@ Once the distance matrix is built, gradient descent
 \begin{algorithm}[H]
  \SetVline
  \KwData{workspace:=(grid, distance, source, destination)}
- \KwResult{Computes the distance matrix }
+ \KwResult{Compute the distance matrix }
  Queue $Q:=\phi$\;
  Enqueue($Q$, destination)\;
  distance[destination]=$0$\;
  \tcc{mark destination as visited}
- grid[destination]=1\;
+ grid[destination]$\leftarrow$1\;
  \While{Q is not empty}{
   $u$ $\leftarrow$ Dequeue($Q$) \;
   \For{$v$ adjacent to $u$, free and not visited}
   {
     Enqueue($Q$,$v$)\;
     \tcc{mark $v$ as visited}
-    grid[$v$]=$1$\; 
+    grid[$v$] $\leftarrow$ $1$\; 
     distance[$v$] $\leftarrow$ distance[$u$]+$1$\;
 }
  }

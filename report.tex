@@ -15,7 +15,7 @@
 \usepackage{mathrsfs}
 \usepackage{listings}
 \usepackage{verbatim}
-\usepackage{url}
+\usepackage{url,hyperref}
 
 
 \title{Motion Planning Workshop}
@@ -29,7 +29,7 @@
 
 	This program is created to illustrate the autonomous path finding from a source to a destination point in a given grid. This problem is solved using two methods and the user will be presented with outputs from both the programs. The program uses a specific data structure to store the workspace and two motion planning schemes namely:
 	\begin{enumerate}
-	\item A heuristics navigation function
+	\item A navigation function
 	\item A star algorithm
 	\end{enumerate}
 
@@ -43,29 +43,189 @@
 	\item Similarly a path is created using A * algorithm and printed on standard output.
 	\end{enumerate}
 
-\section{Data structures}
-	Proper storage and programmatic representation of the workspace is an important aspect in this context of motion planning. We are using a \textsf{C} programming language \textsf{structure} to encapsulate the workspace and further typed it with \textsf{typedef}. The name of structure is \textsf{Workshop}, typed as \textsf{workspace} and it contains	
+\section{Data Structures}
+	Proper storage and programmatic representation of the workspace is an important aspect in this context of motion planning. We are using a \textsf{C} programming language \textsf{structure} to encapsulate the workspace and further typed it with \textsf{typedef}. The name of structure is \textsf{Workspace}, typed as \textsf{workspace} and it contains	
 	\begin{itemize}
 	\item the dimensions of Workspace as \textsf{integers}.
 	\item source and destinations coordinates as of type \textsf{integers}.
-	\item two, two dimensional \textsf{arrays} for storing the individual values in the workshop and the distance matrix.
+	\item two, two dimensional \textsf{arrays} for storing the individual values of the workspace and the distance matrix.
 	\item two additional \textsf{arrays} for storing the (x, y) coordinates of the path from source to destination.
 	\end{itemize}
 	
-	The placing of obstacles in the workspace is a random process and around little less then 50 percent of blocks in the workspace containd obstacles. This however can be changed at will, in the function \textsf{input()} of \textsf{util.c} program.
+	\begin{lstlisting}[language=C,frame=lines]
+	struct  Workspace {
+		int nbrows, nbcolumns, sx, sy, dx, dy;
+		int **grid, **distance;
+		int *pathx, *pathy;
+	};
+	typedef struct Workspace workspace;
+	\end{lstlisting}
+	
+	We used a convention to represent workspace, that is, to use number \textsf{0} for empty cells and number \textsf{1} for obstacles. The placing of obstacles in the workspace is a random process and consist of little less then 50 percent of blocks in the workspace. This however can be changed at will, in the function \textsf{input()} of \textsf{util.c} program.
 
-\section{Navigation function}
-	Navigation function is an technique used to estimate the path from the source to destination. The algorithm used to implement this navigation function is a breadth first search (BFS) technique traversal algorithm[2]. BFS is a graph search technique and uses basis queue operations while traversing the components. The implementation of navigation function, finds a node which is nearest to the current node and adds it to the path. The space complexity of of a BFS algorithm is at most \textsf{O(|V|+|E|)} times, where V and E are the number of vertices and edges respectively. The reason for this is, during the traversal in worst cases, every vertices will be traversed at most once.
+\section{Navigation Function}
+	Navigation function is a technique used to estimate the path from the source to destination. The algorithm used to implement this navigation function is a breadth first search (BFS) technique traversal algorithm[2]. BFS is a graph search technique and uses basic queue operations while traversing the graph. The implementation of navigation function, finds a node which is nearest to the current node and adds it to the path. The space complexity of of a BFS algorithm is at most \textsf{O(|V|+|E|)} times, where V and E are the number of vertices and edges respectively. The reason for this is, during the traversal in worst cases, every vertices will be traversed at most once.
+	
+\section{Calculating Distance Matrix}
+	We have used the \textsf{wavefront algorithm} for performing this process. However, there exist various ways to implement this, with our choice being the iterative one. This is done in the \textsf{void computeDistance(workspace* w);} function in \textsf{navigation.c} program. The approach we have used is:
+	\begin{enumerate}
+	\item two arrays are used (\textsf{tovisitx \& tovisity}) for storing the coordinates of current element being processed and each element initialized to -1.
+	\item start with the destination element and push them in a queue.
+	\item go through all the possible nodes which doesn't contain an obstacle, count them and save there coordinates.
+	\item once you have the list of child nodes, mark them as visited and push the node(s) in the queue.
+	\item change the distance value of the child nodes as one plus the distance of parent nodes.
+	\item repeat step 3 to 5, until the queue is empty.
+	\end{enumerate}
 
+\section{A Star Algorithm}
+	Our final objective was to implement A* search algorithm[3], which as well is a fairly straight foreword popular algorithm.
+	
+\section{Execution of source code}
 
-\section{A star algorithm}
-	Our final objective was to implement A* search algorithm[3], which as well is fairly straight foreword.
+	The motion planning workshop code which is submitted with this project have been tested for execution on \textsf{ensibm} server in ENSIMAG building. The program, however can be executed on any standard Linux terminal by typing \textsf{'./motionplanning'}. A sample run:
+	\begin{verbatim}
+ machine@machine:~$./motionplanning
+ Enter the size of the grid:5
+5
+
+ Enter source coordinate(for x, y >= 0):0
+2
+
+ Enter destination coordinate(for x, y >= 0):2
+2
+The destination or the source is at an obstacle
+The source is (0,2) 
+The destination is (2,2) 
+
+Displaying the workspace:
+ 0	-1	 0	 0	 0	
+ 0	 0	-1	 0	-1	
+ 0	-1	-1	-1	 0	
+-1	 0	-1	 0	 0	
+ 0	 0	 0	 0	-1	
+	\end{verbatim}
+	During the execution of a program, the placing of obstacles happen at random. In the above case, the source or destination happen to be over an obstacle and hence, the program terminated, after displaying the workspace. In such a case, the user can choose to re run and specify a different set of values for the \textsf{workspace}. A sample program output when the source or destination is not over an obstacle:
+	
+	\begin{verbatim}
+ machine@machine:~$./motionplanning
+ Enter the size of the grid:7
+8
+
+ Enter source coordinate(for x, y >= 0):3
+3
+
+ Enter destination coordinate(for x, y >= 0):2
+2
+The source is (3,3) 
+The destination is (2,2) 
+
+Displaying the workspace:
+ 0	 0	-1	 0	 0	-1	-1	-1	
+ 0	 0	 0	 0	 0	 0	 0	-1	
+ 0	 0	 0	-1	-1	 0	-1	 0	
+-1	 0	 0	 0	 0	-1	 0	 0	
+-1	 0	 0	 0	 0	-1	 0	 0	
+ 0	 0	-1	 0	-1	-1	 0	 0	
+-1	-1	 0	 0	-1	 0	-1	-1	
+
+After applying the wavefront algorithm
+-----------------------------------------
+Displaying the distance matrix:
+ 4	 3	-1	 3	 4	-1	-1	-1	
+ 3	 2	 1	 2	 3	 4	 5	-1	
+ 2	 1	 0	-1	-1	 5	-1	 0	
+-1	 2	 1	 2	 3	-1	 0	 0	
+-1	 3	 2	 3	 4	-1	 0	 0	
+ 5	 4	-1	 4	-1	-1	 0	 0	
+-1	-1	 6	 5	-1	 0	-1	-1	
+
+Displaying the path found from source to destination 
+Starting from -> (3, 3, [2]) -> (3, 2, [1]) -> (2, 2, [0]) -> Goal Reached !!
+
+Result of A* algo
+Printing the path now in reveser order
+(2,2) -> (3,2) -> (3,3)
+	\end{verbatim}
+	We provide you with two more \textsf{interesting} test cases, which convinced us about the efficient working of out program:
+	
+		
+	\begin{verbatim}	
+	TEST CASE 1
+	-----------
+machine@machine:~$./motionplanning
+The source is (0,1) 
+The destination is (2,2) 
+
+Displaying the workspace:
+ 0	 0	 0	 0	 0	
+ 0	-1	-1	-1	 0	
+ 0	-1	 0	 0	 0	
+ 0	-1	-1	-1	 0	
+ 0	 0	 0	 0	 0	
+
+After applying the wavefront algorithm
+-----------------------------------------
+Displaying the distance matrix:
+ 8	 7	 6	 5	 4	
+ 9	-1	-1	-1	 3	
+ 10	-1	 0	 1	 2	
+ 9	-1	-1	-1	 3	
+ 8	 7	 6	 5	 4	
+
+Displaying the path found from source to destination 
+Starting from -> (0, 1, [7]) -> (0, 2, [6]) -> (0, 3, [5]) -> (0, 4, [4]) -> (1, 4, [3]) -> (2, 4, [2]) -> (2, 3, [1]) -> (2, 2, [0]) -> Goal Reached !!
+
+Result of A* algo
+Printing the path now in reveser order
+(2,2) -> (2,3) -> (2,4) -> (1,4) -> (0,4) -> (0,3) -> (0,2) -> (0,1)	
+	\end{verbatim}
+	
+		
+	\begin{verbatim}
+	TEST CASE 2
+	-----------	
+machine@machine:~$./motionplanning
+The source is (0,1) 
+The destination is (2,2) 
+
+Displaying the workspace:
+ 0	 0	 0	 0	 0	
+ 0	-1	-1	-1	 0	
+ 0	-1	 0	-1	 0	
+ 0	-1	-1	-1	 0	
+ 0	 0	 0	 0	 0	
+
+After applying the wavefront algorithm
+-----------------------------------------
+Displaying the distance matrix:
+ 0	 0	 0	 0	 0	
+ 0	-1	-1	-1	 0	
+ 0	-1	 0	-1	 0	
+ 0	-1	-1	-1	 0	
+ 0	 0	 0	 0	 0	
+
+The source is (0,1) 
+The destination is (2,2) 
+
+Displaying the workspace:
+ 0	 0	 0	 0	 0	
+ 0	-1	-1	-1	 0	
+ 0	-1	 0	-1	 0	
+ 0	-1	-1	-1	 0	
+ 0	 0	 0	 0	 0	
+
+Path could not be found
+Result of A* algo
+Search failed !!	
+	\end{verbatim}
+	
+	
 
 \section{References}
 	\begin{enumerate}
-	\item Wavefront algorithm, \url{http://www.societyofrobots.com/programming_wavefront.shtml}
-	\item Breadth first search traversal algorithm, \url{http://www.personal.kent.edu/~rmuhamma/Algorithms/MyAlgorithms/GraphAlgor/breadthSearch.htm}
-	\item A* algorithm \url{http://en.wikipedia.org/wiki/A*_search_algorithm}
+	\item Wavefront algorithm, \href{http://www.societyofrobots.com/programming_wavefront.shtml}{\nolinkurl{http://www.societyofrobots.com/programming_wavefront.shtml}}
+	\item Breadth first search traversal algorithm, \href{http://www.personal.kent.edu/~rmuhamma/Algorithms/MyAlgorithms/GraphAlgor/breadthSearch.htm}{\nolinkurl{http://www.personal.kent.edu/~rmuhamma/Algorithms/MyAlgorithms/GraphAlgor/breadthSearch.htm}}
+	\item A* algorithm \href{http://en.wikipedia.org/wiki/A*_search_algorithm}{\nolinkurl{http://en.wikipedia.org/wiki/A*_search_algorithm}}
 	\end{enumerate}
 
 \end{document}

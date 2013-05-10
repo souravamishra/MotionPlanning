@@ -80,12 +80,12 @@ void input (workspace *w) {
 	
 	printf ("\n Enter the size of the grid:");
 	scanf ("%d%d", &w->nbrows, &w->nbcolumns);
-	printf ("\n Enter source coordinate(for x, y >= 0):");
+	printf ("\n Enter source coordinate(for x, y >= 1):");
 	scanf ("%d%d", &w->sx, &w->sy);
-	printf ("\n Enter destination coordinate(for x, y >= 0):");
+	printf ("\n Enter destination coordinate(for x, y >= 1):");
 	scanf ("%d%d", &w->dx, &w->dy);
 	
-	init (w);
+	init (w); //to allocate memory 
 	
 	t = w->nbrows * w->nbcolumns / 2;
 	srand (time(NULL));

@@ -23,3 +23,6 @@ clean:
 	rm -f $(objects)
 	rm -f $(executables)
 	rm -f *~ *.aux *.log
+
+pdf:
+	pdflatex report.tex

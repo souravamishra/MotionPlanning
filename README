@@ -1,11 +1,37 @@
 			MOTION PLANNING WORKSHOP
 			------------------------
 
+INTRODUCTION
+------------
+
 Lab Workshop on Motion Planning
 Course: Introduction to Perception and Robotics [MOSIG M1 Spring 2013]
 Instructor: Olivier Aycard & Thierry Fraichard
 
+INSTALLATION AND TEST
+---------------------
+
+Open a terminal on any standard Linux machine and change the present working directory to inside 'mpw'. To compile the program type
+	make
+
+On doing 'make' few object files will be created and one executable file named 'motionplanning'. To run the program type
+	./motionplanning
+	
+CONFIGURATION
+-------------
+
+As such no configuration is required before compiling and execution of the program. However, while running, the user will be asked the specification of the workspace to be created, which has to be entered at runtime. For details on the kind and type of input values for workspace, read the report that comes with this program.
+
+CONTACT AND REFERENCE
+---------------------
+
+For further understanding of the algorithms, data structures and working of the program please read the workshop report, that comes with this program. Never the less, for any query which not being clear from the explanations in the report or here in attahed code base, feel free to contact the authors of the program.
 
 Written By:
 SOURAVA PRASAD MISHRA <sourav7mishra@gmail.com> and
 AMRIT KUMAR <amrit.honey@gmail.com>
+
+LICENSE
+-------
+
+This source code is available under the terms of the version 3 of the GNU General Public License as published by the Free Software Foundation. You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>

@@ -8,37 +8,64 @@
 \usepackage{graphicx} 
 \usepackage[latin1]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[francais]{babel}
+%\usepackage[francais]{babel}
 \usepackage{pdfpages}
 \usepackage[top=2cm, bottom=2cm, left=3cm, right=3cm]{geometry}
 \usepackage{fancyvrb}
 \usepackage{mathrsfs}
 \usepackage{listings}
 \usepackage{verbatim}
-
+\usepackage{url}
 
 
 \title{Motion Planning Workshop}
 \author{Sourava Prasad Mishra, Amrit Kumar}
 \date{April 17 2013}
 
-%\newcommand{\F}{\mathscr{F}} 
-%\newcommand{\D}{\mathscr{D}} 
 \begin{document}
 \maketitle
 
-\section*{Introduction}
-Motion Planning workshop
-The programming language used for the writing the code is c.
-To compile	: make
-To run		: ./motionplanning
+\section{Introduction}
 
-\section*{Data structures}
-\section*{C Function}
-\section*{Algorithms}
+	This program is created to illustrate the autonomous path finding from a source to a destination point in a given grid. This problem is solved using two methods and the user will be presented with outputs from both the programs. The program uses a specific data structure to store the workspace and two motion planning schemes namely:
+	\begin{enumerate}
+	\item A heuristics navigation function
+	\item A star algorithm
+	\end{enumerate}
+
+	The general working of this motion planning program is as follows:
+	\begin{enumerate}
+	\item Firstly, an instance of the data structure is created.
+	\item Then the user is asked to enter various workspace parameters at run time.
+	\item The workspace is initialized along with a check on the source and destination coordinate, for if they are over an obstacle.
+	\item A distance matrix is computed using \textsf{wavefront algorithm}[1], to find the distance of all the blocks from the destination.
+	\item If exist, an optimal path is calculated from source to destination using the above obtained distance matrix and printed on standard output.
+	\item Similarly a path is created using A * algorithm and printed on standard output.
+	\end{enumerate}
+
+\section{Data structures}
+	Proper storage and programmatic representation of the workspace is an important aspect in this context of motion planning. We are using a \textsf{C} programming language \textsf{structure} to encapsulate the workspace and further typed it with \textsf{typedef}. The name of structure is \textsf{Workshop}, typed as \textsf{workspace} and it contains	
+	\begin{itemize}
+	\item the dimensions of Workspace as \textsf{integers}.
+	\item source and destinations coordinates as of type \textsf{integers}.
+	\item two, two dimensional \textsf{arrays} for storing the individual values in the workshop and the distance matrix.
+	\item two additional \textsf{arrays} for storing the (x, y) coordinates of the path from source to destination.
+	\end{itemize}
+	
+	The placing of obstacles in the workspace is a random process and around little less then 50 percent of blocks in the workspace containd obstacles. This however can be changed at will, in the function \textsf{input()} of \textsf{util.c} program.
+
+\section{Navigation function}
+	Navigation function is an technique used to estimate the path from the source to destination. The algorithm used to implement this navigation function is a breadth first search (BFS) technique traversal algorithm[2]. BFS is a graph search technique and uses basis queue operations while traversing the components. The implementation of navigation function, finds a node which is nearest to the current node and adds it to the path. The space complexity of of a BFS algorithm is at most \textsf{O(|V|+|E|)} times, where V and E are the number of vertices and edges respectively. The reason for this is, during the traversal in worst cases, every vertices will be traversed at most once.
 
 
+\section{A star algorithm}
+	Our final objective was to implement A* search algorithm[3], which as well is fairly straight foreword.
 
-
+\section{References}
+	\begin{enumerate}
+	\item Wavefront algorithm, \url{http://www.societyofrobots.com/programming_wavefront.shtml}
+	\item Breadth first search traversal algorithm, \url{http://www.personal.kent.edu/~rmuhamma/Algorithms/MyAlgorithms/GraphAlgor/breadthSearch.htm}
+	\item A* algorithm \url{http://en.wikipedia.org/wiki/A*_search_algorithm}
+	\end{enumerate}
 
 \end{document}

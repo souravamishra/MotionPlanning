@@ -33,81 +33,12 @@ void init (workspace *w) {
 
 }
 
-int obstacles (workspace *w)  {
-
-	int i, j;
-  //////////////Random test/////////////////////	
- //int t,c;
-  /*	t = w->nbrows * w->nbcolumns / 5;
-	
-	for (c = 0; c < t; c++) {
-		i= rand()%(w->nbrows);
-		j=rand()%(w->nbcolumns);
-		w->grid[i][j] = -1;
-	}
-  */
-	/////////////////////////////////////////////////
-
-
-/////////////test 1////////////////////
-/*
-	w->grid[1][1]=-1;
-	w->grid[2][1]=-1;
-	w->grid[w->dx][w->dy]=1;  // Needed for the algo to work correctly
-	for(i=0;i<w->nbrows;i++)
-		for(j=0;j<w->nbcolumns;j++)
-			if(w->grid[i][j]==-1)
-				w->distance[i][j]=-1;  //the obstacles cannot be reached	
-*/
-  //////////////////////////////////////
-  
-  
-/////test 2///////////////////////////
-  w->grid[1][1]=-1;
-  w->grid[1][2]=-1;
-  w->grid[1][3]=-1;
-  w->grid[2][1]=-1;
-  w->grid[3][1]=-1;
-  w->grid[3][2]=-1;
-  w->grid[3][3]=-1;
-
-  
-  /*DO MAKE A CHECK while defining the obstacles(whether destination is an obstacle)
-   * 
-   */
-  if(w->grid[w->dx][w->dy]==-1 || w->grid[w->sx][w->sy]==-1) return 1;
-  w->grid[w->dx][w->dy]=1;  // Needed for the algos to work correctly
-	
- for(i=0;i<w->nbrows;i++)
-		for(j=0;j<w->nbcolumns;j++)
-			if(w->grid[i][j]==-1)
-				w->distance[i][j]=-1;  //the obstacles cannot be reached	
-  
-//////////////////////////////////////////////////
-
-  /////test 3///////////////////////////
-  /*  	w->grid[1][1]=-1;
-    w->grid[1][2]=-1;
-    w->grid[1][3]=-1;
-    w->grid[2][1]=-1;
-    w->grid[2][3]=-1;
-    w->grid[3][1]=-1;
-    w->grid[3][2]=-1;
-    w->grid[3][3]=-1;
-    
-	w->grid[w->dx][w->dy]=1;  // Needed for the algo to work correctly
-	for(i=0;i<w->nbrows;i++)
-		for(j=0;j<w->nbcolumns;j++)
-			if(w->grid[i][j]==-1)
-				w->distance[i][j]=-1;  //the obstacles cannot be reached	
-  */
-//////////////////////////////////////////////////
- 
-	disp_grid(w);
-  return 0;
-  //disp_distance(w);
-	
-
+int obstacles (workspace *w)  { 
+	//DO MAKE A CHECK while defining the obstacles(whether destination is an obstacle)
+	if(w->grid[w->dx][w->dy]==-1 || w->grid[w->sx][w->sy]==-1) return 1;disp_grid(w);	
+	w->grid[w->dx][w->dy]=1;  // Needed for the algos to work correctly
+	return 0;
+	//disp_distance(w);
 }
 
 void disp_grid (workspace *w) {
@@ -144,31 +75,30 @@ void disp_distance(workspace *w){
 }
 
 void input (workspace *w) {
-	/*printf ("\n Enter the size of the grid:");
-	scanf ("%d%d", &w->x, &w->y);
+	
+	int i, j, t, c;
+	
+	printf ("\n Enter the size of the grid:");
+	scanf ("%d%d", &w->nbrows, &w->nbcolumns);
 	printf ("\n Enter source coordinate(for x, y >= 0):");
 	scanf ("%d%d", &w->sx, &w->sy);
 	printf ("\n Enter destination coordinate(for x, y >= 0):");
-	scanf ("%d%d", &w->dx, &w->dy); */
+	scanf ("%d%d", &w->dx, &w->dy);
 	
-  
-  /////////test 1///////////
-  /*
-	w->nbrows  = 3; w->nbcolumns  = 3;
-	w->sx = 0; w->sy = 1;
-	w->dx = 2; w->dy = 2;
-  */
-  //////////////////////////
-  
-  
-  /////////test 2///////////
-
-	w->nbrows  = 5; w->nbcolumns  = 5;
-	w->sx = 0; w->sy = 1;
-	w->dx = 2; w->dy = 2;
- 
-  //////////////////////////
-  
+	init (w);
+	
+	t = w->nbrows * w->nbcolumns / 2;
+	srand (time(NULL));
+	for (c = 0; c < t; c++) {
+		i= rand()%(w->nbrows);
+		j=rand()%(w->nbcolumns);
+		w->grid[i][j] = -1;
+	}
+	
+	for(i=0;i<w->nbrows;i++)
+		for(j=0;j<w->nbcolumns;j++)
+			if(w->grid[i][j]==-1)
+				w->distance[i][j]=-1;  //the obstacles cannot be reached
 
 }
 

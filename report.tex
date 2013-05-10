@@ -1,8 +1,5 @@
 \documentclass[12pt]{article}
-\title{Relational Schema for Transport Management System \\ Database
-  Project (Part 2)}
-\author{\textsc{Amrit Kumar} 
-  \\ \textsc{Mosig}-\textsc{Ensimag} }
+
 \pagenumbering{Roman}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -12,7 +9,6 @@
 \usepackage[left=1.0in, right=1.0in, top=1.0in, bottom=1.0in]{geometry}
 \usepackage{layout}
 \usepackage{lmodern}
-\usepackage{stmaryrd}
 \usepackage{amsthm}
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -79,7 +75,7 @@ The general working of the presented motion planning program is as follows:
     at run-time. 
 	\item The workspace is initialized (with random obstacles) along with a check on the source and destination coordinates, for if they are over an obstacle.
 	\item The navigation function is used to compute the distance
-    matrix using \textsf{wavefront algorithm} \ref{item:1}. The distance matrix
+    matrix using \textsf{wavefront algorithm} [\ref{item:1}]. The distance matrix
     stores the distance of all the cells from the destination.
 	\item An optimal path, if exists is calculated from source to
     destination using the previously obtained distance matrix and printed
@@ -90,7 +86,7 @@ The general working of the presented motion planning program is as follows:
 \section{Data Structure}
 	Proper storage and programmatic representation of the workspace is
   an important aspect in the context of motion planning. We are using
-  a \textsf{C} programming language \textsf{struct} \autoref{struct} to encapsulate the
+  a \textsf{C} programming language \textsf{struct} [\autoref{struct}] to encapsulate the
   workspace and further typed with \textsf{typedef}. The structure
   is named \textsf{Workspace}, typed as \textsf{workspace} and it
   contains :	
@@ -102,7 +98,7 @@ The general working of the presented motion planning program is as follows:
 	The convention used to represent workspace is : $0$ for empty
   cells and $-1$ for obstacles. The placing
   of obstacles in the workspace is a random process and consists
-  \textcolor{orange} {of little less than 50\% of all the cells} in the
+  {of 50\% of all the cells} in the
   workspace. However this can be changed if desired, in the function \textsf{input()} of \textsf{util.c} program.
 
 	\item two additional \textsf{arrays} for storing the $(x, y)$
@@ -132,7 +128,7 @@ The general working of the presented motion planning program is as follows:
 
 \section{Navigation Function \& Gradient Descent}
 	The discrete navigation function is used to obtain the distance matrix previously discussed. Breadth first search (BFS) traversal
-  algorithm \ref{item:2} is used for the purpose. \textcolor{orange}{The space complexity of BFS is
+  algorithm [\ref{item:2}] is used for the purpose. {The space complexity of BFS is
     \textsf{O(|V|+|E|)},} where V and E are set of vertices and edges respectively. 
 
 Once the distance matrix is built, gradient descent
@@ -144,7 +140,7 @@ Once the distance matrix is built, gradient descent
  The iterative version of the wavefront algorithm is implemented
  which resembles BFS. This is done in the \textsf{void
    computeDistance(workspace* w)} function in \textsf{navigation.c}
- program. The pseudo-code is presented in \autoref{Code:algo}: \\
+ program. The pseudo-code is presented in [\autoref{Code:algo}]: \\
 
 
 \restylealgo{algoruled}
@@ -152,19 +148,19 @@ Once the distance matrix is built, gradient descent
 \begin{algorithm}[H]
  \SetVline
  \KwData{workspace:=(grid, distance, source, destination)}
- \KwResult{Compute the distance matrix }
+ \KwResult{Computes the distance matrix }
  Queue $Q:=\phi$\;
  Enqueue($Q$, destination)\;
- distance[destination]=$0$\;
+ distance[destination] $\leftarrow$ $0$\;
  \tcc{mark destination as visited}
- grid[destination]$\leftarrow$1\;
+ grid[destination]=1\;
  \While{Q is not empty}{
   $u$ $\leftarrow$ Dequeue($Q$) \;
   \For{$v$ adjacent to $u$, free and not visited}
   {
     Enqueue($Q$,$v$)\;
     \tcc{mark $v$ as visited}
-    grid[$v$] $\leftarrow$ $1$\; 
+    grid[$v$]=$1$\; 
     distance[$v$] $\leftarrow$ distance[$u$]+$1$\;
 }
  }
@@ -175,7 +171,7 @@ Once the distance matrix is built, gradient descent
 
 \section{A* Algorithm}
 	Our final objective was to implement A* search algorithm
-  \ref{item:3}, which is a fairly straight-forward popular
+  [\ref{item:3}], which is a fairly straight-forward popular
   algorithm. The usual \textit{Manhattan distance} is used to estimate
   the heuristic distance.
 	
@@ -256,15 +252,11 @@ Result of A* algo
 Printing the path now in reveser order
 (2,2) -> (3,2) -> (3,3)
 	\end{verbatim}
-<<<<<<< HEAD
   The zeros except at the destination cell indicate that the cells are
 not reachable.
 
 	We provide here three more \textit{interesting} test cases, which
   convinced us of the correctness of the implementation:
-=======
-	We provide you with few more \textsf{interesting} test cases, which convinced us about the efficient working of out program:
->>>>>>> 0419a0eae05e35a78ea633672d3b7397867c4066
 	
 		
 	\begin{verbatim}	
@@ -370,39 +362,8 @@ Result of A* algo
 Search failed !!	
 	\end{verbatim}
 	
-<<<<<<< HEAD
 
 
-=======
-	\begin{verbatim}	
-	TEST CASE 3
-	-----------
-machine@machine:~$./motionplanning
-The source is (0,0) 
-The destination is (2,2) 
-
-Displaying the workspace:
- 0	-1	 0	
- 0	 0	 0	
- 0	-1	 0	
- 0	-1	 0	
-
-After applying the wavefront algorithm
------------------------------------------
-Displaying the distance matrix:
- 4	-1	 2	
- 3	 2	 1	
- 4	-1	 0	
- 5	-1	 1	
-
-Displaying the path found from source to destination 
-Starting from -> (0, 0, [4]) -> (1, 0, [3]) -> (1, 1, [2]) -> (1, 2, [1]) -> (2, 2, [0]) -> Goal Reached !!
-
-Result of A* algo
-Printing the path now in reveser order
-(2,2) -> (1,2) -> (1,1) -> (1,0) -> (0,0)
-	\end{verbatim}	
->>>>>>> 0419a0eae05e35a78ea633672d3b7397867c4066
 	
 
 \section{References}

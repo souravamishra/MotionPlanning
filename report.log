@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.4.28)  10 MAY 2013 23:36
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.4.28)  10 MAY 2013 23:48
 entering extended mode
  %&-line parsing enabled.
 **report.tex
@@ -857,8 +857,7 @@ Package hyperref Info: Option `pdfmenubar' set `true' on input line 47.
 Package hyperref Info: Option `pdffitwindow' set `false' on input line 47.
 Package hyperref Info: Option `pdfnewwindow' set `true' on input line 47.
 Package hyperref Info: Option `colorlinks' set `true' on input line 47.
-
-No file report.aux.
+ (./report.aux)
 \openout1 = `report.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 56.
@@ -875,6 +874,7 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 56.
 LaTeX Font Info:    ... okay on input line 56.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 56.
 LaTeX Font Info:    Try loading font information for TS1+cmr on input line 56.
+
 (/usr/share/texmf-texlive/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
@@ -1008,14 +1008,7 @@ LaTeX Font Info:    Try loading font information for T1+lmss on input line 82.
 
 (/usr/share/texmf/tex/latex/lm/t1lmss.fd
 File: t1lmss.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-
-LaTeX Warning: Reference `item:1' on page I undefined on input line 82.
-
-
-LaTeX Warning: Reference `struct' on page I undefined on input line 93.
-
-[1
+) [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    External font `lmex10' loaded for size
@@ -1044,10 +1037,7 @@ LaTeX Font Info:    Try loading font information for TS1+lmr on input line 126.
 File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 
-LaTeX Warning: Reference `item:2' on page II undefined on input line 135.
-
-
-LaTeX Warning: Reference `Code:algo' on page II undefined on input line 147.
+Package hyperref Warning: No autoref name for `algocfline' on input line 147.
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 144--148
@@ -1071,11 +1061,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 152--173
 
  []
 
-[2]
-
-LaTeX Warning: Reference `item:3' on page III undefined on input line 178.
-
-[3] [4]
+[2] [3] [4]
 Overfull \hbox (5.72021pt too wide) in paragraph at lines 258--258
 []\T1/lmtt/m/n/12 Starting from -> (3, 3, [2]) -> (3, 2, [1]) -> (2, 2, [0]) ->
  Goal Reached !![] 
@@ -1112,35 +1098,28 @@ Overfull \hbox (4.14287pt too wide) in paragraph at lines 411--412
 n/12 http : / / www . personal . kent . edu / ~rmuhamma /
  []
 
-[8] (./report.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+[8] (./report.aux) ) 
 Here is how much of TeX's memory you used:
- 11919 strings out of 493848
- 158192 string characters out of 1152823
- 275239 words of memory out of 3000000
- 14919 multiletter control sequences out of 15000+50000
+ 11924 strings out of 493848
+ 158270 string characters out of 1152823
+ 275302 words of memory out of 3000000
+ 14922 multiletter control sequences out of 15000+50000
  67778 words of font info for 67 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
  38i,16n,49p,300b,1353s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dv
-ips/lm/lm-ts1.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/shar
-e/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/l
-m-rm.enc}</usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/f
-onts/type1/public/lm/lmbx8.pfb></usr/share/texmf/fonts/type1/public/lm/lmcsc10.
-pfb></usr/share/texmf/fonts/type1/public/lm/lmmi12.pfb></usr/share/texmf/fonts/
-type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.pfb></u
-sr/share/texmf/fonts/type1/public/lm/lmri12.pfb></usr/share/texmf/fonts/type1/p
-ublic/lm/lmss12.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/sh
-are/texmf/fonts/type1/public/lm/lmtt12.pfb>
-Output written on report.pdf (8 pages, 233761 bytes).
+{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/
+texmf/fonts/enc/dvips/lm/lm-ts1.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mat
+hit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fo
+nts/enc/dvips/lm/lm-rm.enc}</usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb><
+/usr/share/texmf/fonts/type1/public/lm/lmbx8.pfb></usr/share/texmf/fonts/type1/
+public/lm/lmcsc10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi12.pfb></usr/
+share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/publi
+c/lm/lmr17.pfb></usr/share/texmf/fonts/type1/public/lm/lmri12.pfb></usr/share/t
+exmf/fonts/type1/public/lm/lmss12.pfb></usr/share/texmf/fonts/type1/public/lm/l
+msy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt12.pfb>
+Output written on report.pdf (8 pages, 234354 bytes).
 PDF statistics:
- 163 PDF objects out of 1000 (max. 8388607)
+ 168 PDF objects out of 1000 (max. 8388607)
  45 named destinations out of 1000 (max. 500000)
  57 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,25 +1,56 @@
-\documentclass{report}
-
-
-\usepackage{lmodern}
-\usepackage{amsmath,amsfonts}
-\usepackage{listings}
-\usepackage{color} 
-\usepackage{graphicx} 
-\usepackage[latin1]{inputenc}
+\documentclass[12pt]{article}
+\title{Relational Schema for Transport Management System \\ Database
+  Project (Part 2)}
+\author{\textsc{Amrit Kumar} 
+  \\ \textsc{Mosig}-\textsc{Ensimag} }
+\pagenumbering{Roman}
 \usepackage[T1]{fontenc}
-%\usepackage[francais]{babel}
-\usepackage{pdfpages}
-\usepackage[top=2cm, bottom=2cm, left=3cm, right=3cm]{geometry}
-\usepackage{fancyvrb}
-\usepackage{mathrsfs}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage[english,french]{babel}
+\usepackage{etex}
+\usepackage[left=1.0in, right=1.0in, top=1.0in, bottom=1.0in]{geometry}
+\usepackage{layout}
+\usepackage{lmodern}
+\usepackage{stmaryrd}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{textcomp}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[all]{hypcap}
+\usepackage{tabularx}
+\usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{listings}
-\usepackage{verbatim}
-\usepackage{url,hyperref}
+\usepackage{algorithm2e}
+\hypersetup{
+  bookmarks=true,         % show bookmarks bar?
+  unicode=false,          % non-Latin characters in Acrobat’s bookmarks
+  pdftoolbar=true,        % show Acrobat’s toolbar?
+  pdfmenubar=true,        % show Acrobat’s menu?
+  pdffitwindow=false,     % window fit to page when opened
+  pdfstartview={FitH},    % fits the width of the page to the window
+  pdftitle={My title},    % title
+  pdfauthor={Author},     % author
+  pdfsubject={Subject},   % subject of the document
+  pdfcreator={Creator},   % creator of the document
+  pdfproducer={Producer}, % producer of the document
+  pdfkeywords={keyword1} {key2} {key3}, % list of keywords
+  pdfnewwindow=true,      % links in new window
+  colorlinks=true,       % false: boxed links; true: colored links
+  linkcolor=cyan,          % color of internal links (change box color with linkbordercolor)
+  citecolor=green,        % color of links to bibliography
+  filecolor=magenta,      % color of file links
+  urlcolor=cyan           % color of external links
+}
 
 
-\title{Motion Planning Workshop}
-\author{Sourava Prasad Mishra, Amrit Kumar}
+
+\title{Motion Planning Workshop \\ Introduction to Perception and Robotics}
+\author{\textsc{Sourava Prasad Mishra} \& \textsc{Amrit Kumar}
+  \\ \textsc{Mosig} \\ \textsc{Ensimag-Ujf}  }
 \date{April 17 2013}
 
 \begin{document}
@@ -27,32 +58,69 @@
 
 \section{Introduction}
 
-	This program is created to illustrate the autonomous path finding from a source to a destination point in a given grid. This problem is solved using two methods and the user will be presented with outputs from both the programs. The program uses a specific data structure to store the workspace and two motion planning schemes namely:
-	\begin{enumerate}
-	\item A navigation function
-	\item A star algorithm
+	The objective of this project is to implement two autonomous path
+  finding algorithms from a source to a destination point in a
+  discrete environment with obstacles. As demanded, we present the
+  following two solutions detailed in the next sections:
+
+  \begin{enumerate}
+	\item Discrete numeric navigation function with gradient descent
+	\item A* algorithm
 	\end{enumerate}
 
-	The general working of this motion planning program is as follows:
+The implementation provides a user with results from both the above
+cited methods. A specific data structure is conceived to store the
+workspace upon which the two motion planning schemes have been built.
+
+The general working of the presented motion planning program is as follows:
 	\begin{enumerate}
 	\item Firstly, an instance of the data structure is created.
-	\item Then the user is asked to enter various workspace parameters at run time.
-	\item The workspace is initialized along with a check on the source and destination coordinate, for if they are over an obstacle.
-	\item A distance matrix is computed using \textsf{wavefront algorithm}[1], to find the distance of all the blocks from the destination.
-	\item If exist, an optimal path is calculated from source to destination using the above obtained distance matrix and printed on standard output.
-	\item Similarly a path is created using A * algorithm and printed on standard output.
+	\item Then the user is asked to enter various workspace parameters
+    at run-time. 
+	\item The workspace is initialized (with random obstacles) along with a check on the source and destination coordinates, for if they are over an obstacle.
+	\item The navigation function is used to compute the distance
+    matrix using \textsf{wavefront algorithm} \ref{item:1}. The distance matrix
+    stores the distance of all the cells from the destination.
+	\item An optimal path, if exists is calculated from source to
+    destination using the previously obtained distance matrix and printed
+    on the standard output.
+	\item Similarly a path is found using A* algorithm and printed on the standard output.
 	\end{enumerate}
 
-\section{Data Structures}
-	Proper storage and programmatic representation of the workspace is an important aspect in this context of motion planning. We are using a \textsf{C} programming language \textsf{structure} to encapsulate the workspace and further typed it with \textsf{typedef}. The name of structure is \textsf{Workspace}, typed as \textsf{workspace} and it contains	
+\section{Data Structure}
+	Proper storage and programmatic representation of the workspace is
+  an important aspect in the context of motion planning. We are using
+  a \textsf{C} programming language \textsf{struct} \autoref{struct} to encapsulate the
+  workspace and further typed with \textsf{typedef}. The structure
+  is named \textsf{Workspace}, typed as \textsf{workspace} and it
+  contains :	
 	\begin{itemize}
 	\item the dimensions of Workspace as \textsf{integers}.
-	\item source and destinations coordinates as of type \textsf{integers}.
-	\item two, two dimensional \textsf{arrays} for storing the individual values of the workspace and the distance matrix.
-	\item two additional \textsf{arrays} for storing the (x, y) coordinates of the path from source to destination.
+	\item source and destination coordinates are of type \textsf{integers}.
+	\item $2$ two-dimensional \textsf{arrays}, for storing the cell-type of the workspace and the distance matrix.
+    
+	The convention used to represent workspace is : $0$ for empty
+  cells and $-1$ for obstacles. The placing
+  of obstacles in the workspace is a random process and consists
+  \textcolor{orange} {of little less than 50\% of all the cells} in the
+  workspace. However this can be changed if desired, in the function \textsf{input()} of \textsf{util.c} program.
+
+	\item two additional \textsf{arrays} for storing the $(x, y)$
+    coordinates of the cells forming the path from source to
+    destination. \\
 	\end{itemize}
+  
+  
+  \lstset{                                    % line wrapping on
+  language=C,
+  frame=lines,
+  captionpos=b
+ }
+
+
+\renewcommand{\lstlistingname}{Code}
 	
-	\begin{lstlisting}[language=C,frame=lines]
+	\begin{lstlisting}[caption=Workspace struct, label=struct]
 	struct  Workspace {
 		int nbrows, nbcolumns, sx, sy, dx, dy;
 		int **grid, **distance;
@@ -61,28 +129,64 @@
 	typedef struct Workspace workspace;
 	\end{lstlisting}
 	
-	We used a convention to represent workspace, that is, to use number \textsf{0} for empty cells and number \textsf{1} for obstacles. The placing of obstacles in the workspace is a random process and consist of little less then 50 percent of blocks in the workspace. This however can be changed at will, in the function \textsf{input()} of \textsf{util.c} program.
 
-\section{Navigation Function}
-	Navigation function is a technique used to estimate the path from the source to destination. The algorithm used to implement this navigation function is a breadth first search (BFS) technique traversal algorithm[2]. BFS is a graph search technique and uses basic queue operations while traversing the graph. The implementation of navigation function, finds a node which is nearest to the current node and adds it to the path. The space complexity of of a BFS algorithm is at most \textsf{O(|V|+|E|)} times, where V and E are the number of vertices and edges respectively. The reason for this is, during the traversal in worst cases, every vertices will be traversed at most once.
-	
-\section{Calculating Distance Matrix}
-	We have used the \textsf{wavefront algorithm} for performing this process. However, there exist various ways to implement this, with our choice being the iterative one. This is done in the \textsf{void computeDistance(workspace* w);} function in \textsf{navigation.c} program. The approach we have used is:
-	\begin{enumerate}
-	\item two arrays are used (\textsf{tovisitx \& tovisity}) for storing the coordinates of current element being processed and each element initialized to -1.
-	\item start with the destination element and push them in a queue.
-	\item go through all the possible nodes which doesn't contain an obstacle, count them and save there coordinates.
-	\item once you have the list of child nodes, mark them as visited and push the node(s) in the queue.
-	\item change the distance value of the child nodes as one plus the distance of parent nodes.
-	\item repeat step 3 to 5, until the queue is empty.
-	\end{enumerate}
+\section{Navigation Function \& Gradient Descent}
+	The discrete navigation function is used to obtain the distance matrix previously discussed. Breadth first search (BFS) traversal
+  algorithm \ref{item:2} is used for the purpose. \textcolor{orange}{The space complexity of BFS is
+    \textsf{O(|V|+|E|)},} where V and E are set of vertices and edges respectively. 
 
-\section{A Star Algorithm}
-	Our final objective was to implement A* search algorithm[3], which as well is a fairly straight foreword popular algorithm.
+Once the distance matrix is built, gradient descent
+  algorithm is applied to find the nearest cell to the current cell
+  and is added to the path. The algorithm starts with the source cell and terminates when the current cell becomes the destination cell. 
+
+\subsection{Calculating Distance Matrix}
+
+ The iterative version of the wavefront algorithm is implemented
+ which resembles BFS. This is done in the \textsf{void
+   computeDistance(workspace* w)} function in \textsf{navigation.c}
+ program. The pseudo-code is presented in \autoref{Code:algo}: \\
+
+
+\restylealgo{algoruled}
+\linesnumbered
+\begin{algorithm}[H]
+ \SetVline
+ \KwData{workspace:=(grid, distance, source, destination)}
+ \KwResult{Computes the distance matrix }
+ Queue $Q:=\phi$\;
+ Enqueue($Q$, destination)\;
+ distance[destination]=$0$\;
+ \tcc{mark destination as visited}
+ grid[destination]=1\;
+ \While{Q is not empty}{
+  $u$ $\leftarrow$ Dequeue($Q$) \;
+  \For{$v$ adjacent to $u$, free and not visited}
+  {
+    Enqueue($Q$,$v$)\;
+    \tcc{mark $v$ as visited}
+    grid[$v$]=$1$\; 
+    distance[$v$] $\leftarrow$ distance[$u$]+$1$\;
+}
+ }
+ \caption{Compute Distance Matrix \label{Code:algo}}
+\end{algorithm}
+
+
+
+\section{A* Algorithm}
+	Our final objective was to implement A* search algorithm
+  \ref{item:3}, which is a fairly straight-forward popular
+  algorithm. The usual \textit{Manhattan distance} is used to estimate
+  the heuristic distance.
 	
 \section{Execution of source code}
 
-	The motion planning workshop code which is submitted with this project have been tested for execution on \textsf{ensibm} server in ENSIMAG building. The program, however can be executed on any standard Linux terminal by typing \textsf{'./motionplanning'}. A sample run:
+	The motion planning workshop code which is submitted along with this
+  project have been tested on \textsf{ensibm} server at ENSIMAG. The
+  program, however can be executed on any standard Linux terminal by
+  typing \textsf{'./motionplanning'}. 
+
+A sample run:
 	\begin{verbatim}
  machine@machine:~$./motionplanning
  Enter the size of the grid:5
@@ -104,7 +208,13 @@ Displaying the workspace:
 -1	 0	-1	 0	 0	
  0	 0	 0	 0	-1	
 	\end{verbatim}
-	During the execution of a program, the placing of obstacles happen at random. In the above case, the source or destination happen to be over an obstacle and hence, the program terminated, after displaying the workspace. In such a case, the user can choose to re run and specify a different set of values for the \textsf{workspace}. A sample program output when the source or destination is not over an obstacle:
+	During the execution of the program, placing of obstacles happen
+  at random. In the above case, the destination happens to be over an
+  obstacle and hence, the program terminates after displaying the
+  workspace. In such a case, the user can choose to re-run with a
+  different set of values for the \textsf{workspace}.
+
+A sample program output when the source and destination are not over obstacles:
 	
 	\begin{verbatim}
  machine@machine:~$./motionplanning
@@ -146,7 +256,11 @@ Result of A* algo
 Printing the path now in reveser order
 (2,2) -> (3,2) -> (3,3)
 	\end{verbatim}
-	We provide you with two more \textsf{interesting} test cases, which convinced us about the efficient working of out program:
+  The zeros except at the destination cell indicate that the cells are
+not reachable.
+
+	We provide here three more \textit{interesting} test cases, which
+  convinced us of the correctness of the implementation:
 	
 		
 	\begin{verbatim}	
@@ -180,9 +294,42 @@ Printing the path now in reveser order
 (2,2) -> (2,3) -> (2,4) -> (1,4) -> (0,4) -> (0,3) -> (0,2) -> (0,1)	
 	\end{verbatim}
 	
+
+
+\begin{verbatim}	
+	TEST CASE 2
+	-----------
+machine@machine:~$./motionplanning
+The source is (0,0) 
+The destination is (2,2) 
+
+Displaying the workspace:
+ 0	-1	 0	
+ 0	 0	 0	
+ 0	-1	 0	
+ 0	-1	 0	
+
+After applying the wavefront algorithm
+-----------------------------------------
+Displaying the distance matrix:
+ 4	-1	 2	
+ 3	 2	 1	
+ 4	-1	 0	
+ 5	-1	 1	
+
+Displaying the path found from source to destination 
+Starting from -> (0, 0, [4]) -> (1, 0, [3]) -> (1, 1, [2]) -> (1, 2, [1]) -> (2, 2, [0]) -> Goal Reached !!
+
+Result of A* algo
+Printing the path now in reveser order
+(2,2) -> (1,2) -> (1,1) -> (1,0) -> (0,0)
+	\end{verbatim}
+
+
+
 		
 	\begin{verbatim}
-	TEST CASE 2
+	TEST CASE 3
 	-----------	
 machine@machine:~$./motionplanning
 The source is (0,1) 
@@ -219,13 +366,15 @@ Result of A* algo
 Search failed !!	
 	\end{verbatim}
 	
+
+
 	
 
 \section{References}
 	\begin{enumerate}
-	\item Wavefront algorithm, \href{http://www.societyofrobots.com/programming_wavefront.shtml}{\nolinkurl{http://www.societyofrobots.com/programming_wavefront.shtml}}
-	\item Breadth first search traversal algorithm, \href{http://www.personal.kent.edu/~rmuhamma/Algorithms/MyAlgorithms/GraphAlgor/breadthSearch.htm}{\nolinkurl{http://www.personal.kent.edu/~rmuhamma/Algorithms/MyAlgorithms/GraphAlgor/breadthSearch.htm}}
-	\item A* algorithm \href{http://en.wikipedia.org/wiki/A*_search_algorithm}{\nolinkurl{http://en.wikipedia.org/wiki/A*_search_algorithm}}
+	\item \label{item:1}Wavefront algorithm, \href{http://www.societyofrobots.com/programming_wavefront.shtml}{\nolinkurl{http://www.societyofrobots.com/programming_wavefront.shtml}}
+	\item \label{item:2} Breadth first search traversal algorithm, \href{http://www.personal.kent.edu/~rmuhamma/Algorithms/MyAlgorithms/GraphAlgor/breadthSearch.htm}{\nolinkurl{http://www.personal.kent.edu/~rmuhamma/Algorithms/MyAlgorithms/GraphAlgor/breadthSearch.htm}}
+	\item \label{item:3} A* algorithm \href{http://en.wikipedia.org/wiki/A*_search_algorithm}{\nolinkurl{http://en.wikipedia.org/wiki/A*_search_algorithm}}
 	\end{enumerate}
 
 \end{document}

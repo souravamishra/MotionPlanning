@@ -256,11 +256,15 @@ Result of A* algo
 Printing the path now in reveser order
 (2,2) -> (3,2) -> (3,3)
 	\end{verbatim}
+<<<<<<< HEAD
   The zeros except at the destination cell indicate that the cells are
 not reachable.
 
 	We provide here three more \textit{interesting} test cases, which
   convinced us of the correctness of the implementation:
+=======
+	We provide you with few more \textsf{interesting} test cases, which convinced us about the efficient working of out program:
+>>>>>>> 0419a0eae05e35a78ea633672d3b7397867c4066
 	
 		
 	\begin{verbatim}	
@@ -366,8 +370,39 @@ Result of A* algo
 Search failed !!	
 	\end{verbatim}
 	
+<<<<<<< HEAD
 
 
+=======
+	\begin{verbatim}	
+	TEST CASE 3
+	-----------
+machine@machine:~$./motionplanning
+The source is (0,0) 
+The destination is (2,2) 
+
+Displaying the workspace:
+ 0	-1	 0	
+ 0	 0	 0	
+ 0	-1	 0	
+ 0	-1	 0	
+
+After applying the wavefront algorithm
+-----------------------------------------
+Displaying the distance matrix:
+ 4	-1	 2	
+ 3	 2	 1	
+ 4	-1	 0	
+ 5	-1	 1	
+
+Displaying the path found from source to destination 
+Starting from -> (0, 0, [4]) -> (1, 0, [3]) -> (1, 1, [2]) -> (1, 2, [1]) -> (2, 2, [0]) -> Goal Reached !!
+
+Result of A* algo
+Printing the path now in reveser order
+(2,2) -> (1,2) -> (1,1) -> (1,0) -> (0,0)
+	\end{verbatim}	
+>>>>>>> 0419a0eae05e35a78ea633672d3b7397867c4066
 	
 
 \section{References}
